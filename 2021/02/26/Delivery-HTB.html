@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Delivery: HTB" />
+<meta name="author" content="Th3R4nd0m" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here I will be posting writeups for various challenges and HackTheBox machines." />
+<meta property="og:description" content="Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here I will be posting writeups for various challenges and HackTheBox machines." />
+<link rel="canonical" href="/2021/02/26/Delivery-HTB.html" />
+<meta property="og:url" content="/2021/02/26/Delivery-HTB.html" />
+<meta property="og:site_name" content="Th3R4nd0m’s blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-26T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Delivery: HTB" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"/2021/02/26/Delivery-HTB.html"},"@type":"BlogPosting","url":"/2021/02/26/Delivery-HTB.html","author":{"@type":"Person","name":"Th3R4nd0m"},"headline":"Delivery: HTB","dateModified":"2021-02-26T00:00:00-05:00","datePublished":"2021-02-26T00:00:00-05:00","description":"Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here I will be posting writeups for various challenges and HackTheBox machines.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<title>
+  
+    Delivery: HTB
+    
+  -
+  Th3R4nd0m&#39;s blog
+
+  </title>
+
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /></head>
+<body><div class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Th3R4nd0m&#39;s blog<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
+    <span class="social_links">
+        <a class="color-cyan-hover" href="https://twitter.com/TR4nd0m"><i class="fab fa-twitter-square"></i></a><a class="color-purple-hover" href="https://github.com/Th3R4nd0m"><i class="fab fa-github-square"></i></a>
+    </span>
+  </div>
+</div>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+  <div class="author-box">
+    
+    
+        <img src="
+            https://github.com/Th3R4nd0m.png
+        " class="author-avatar" alt="Avatar" />
+    
+Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here I will be posting writeups for various challenges and HackTheBox machines.
+</div>
+
+
+<div class="post">
+  <h1 class="post-title">Delivery: HTB</h1>
+  
+  <div class="post-tags">
+      
+      <a class="tag" href="/tag/hashcat/">hashcat</a>
+      
+  </div>
+  
+  <div class="post-date">Published on 26 Feb 2021</div>
+  
+  <div id="encrypted_content">
+  <form id="encrypt_form" action="#" method="post">
+    <input class = "inp_form"
+           id="encrypt_password"
+           type="text"
+           name="password"
+           placeholder="flag or root_hash"
+           autofocus />
+
+    <input class = "button" type="submit" value="Unlock"/>
+  </form>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+  <script>
+    document.getElementById('encrypt_form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var passphrase = document.getElementById('encrypt_password').value,
+          encryptedMsg = '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',
+          encryptedHMAC = encryptedMsg.substring(0, 64),
+          encryptedHTML = encryptedMsg.substring(64),
+          decryptedHMAC = CryptoJS.HmacSHA256(encryptedHTML, CryptoJS.SHA256(passphrase).toString()).toString();
+
+      if (decryptedHMAC !== encryptedHMAC) {
+        alert('Bad passphrase!');
+        return;
+      }
+
+      var plainHTML = CryptoJS.AES.decrypt(encryptedHTML, passphrase).toString(CryptoJS.enc.Utf8);
+      document.getElementById('encrypted_content').innerHTML = plainHTML;
+    });
+  </script>
+</div>
+
+</div>
+
+
+<div class="comments">
+<div id="disqus_thread"></div>
+<script>
+ var disqus_config = function () {
+     this.page.url = '/2021/02/26/Delivery-HTB.html';
+     this.page.identifier = '/2021/02/26/Delivery-HTB';
+     this.page.title = 'Delivery: HTB';
+ };
+
+ (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
+     var d = document, s = d.createElement('script');
+
+     s.src = '//<your-discuss-shortname>.disqus.com/embed.js';
+
+     s.setAttribute('data-timestamp', +new Date());
+     (d.head || d.body).appendChild(s);
+ })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+</div>
+
+
+
+
+<div class="related">
+  <h2>related posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/2021/02/25/pwnable.tw-silver_bullet.html">
+            Pwnable.tw Silver Bullet
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/2021/02/24/Academy-HTB.html">
+            Academy: HTB
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+  
+  <h2>all tags</h2>
+  <div class="tag-cloud"><a href="/tag/academy/" class="set-1">academy</a> <a href="/tag/compost/" class="set-1">compost</a> <a href="/tag/hashcat/" class="set-1">hashcat</a> <a href="/tag/laravel/" class="set-1">laravel</a> <a href="/tag/nullbyte/" class="set-1">nullbyte</a> <a href="/tag/pwnable.tw/" class="set-1">pwnable.tw</a> <a href="/tag/writeup/" class="set-5">writeup</a></div>
+  
+
+
+
+
+<script>
+  let i = 0;
+  const text = '';
+  const speed = parseInt('50');
+  
+  function typeWriter() {
+    if (i < text.length) {
+      document.getElementById('animated-post-description').innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typeWriter, speed);
+    }
+  }
+
+  document.getElementById('animated-post-description').style.display = 'initial';
+  typeWriter();
+</script>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+  	<center>
+      <script src="https://www.hackthebox.eu/badge/84630"></script>
+    </center>
+    <div class="credits"><a href="https://github.com/bitbrain/jekyll-dash">dash</a> theme for Jekyll by <a href="https://github.com/bitbrain">bitbrain</a> made with <i class="fas fa-heart"></i><div class="toggleWrapper">
+    <input type="checkbox" class="dn" id="theme-toggle" onclick="modeSwitcher()" checked />
+    <label for="theme-toggle" class="toggle">
+    <span class="toggle__handler">
+      <span class="crater crater--1"></span>
+      <span class="crater crater--2"></span>
+      <span class="crater crater--3"></span>
+    </span>
+        <span class="star star--1"></span>
+        <span class="star star--2"></span>
+        <span class="star star--3"></span>
+        <span class="star star--4"></span>
+        <span class="star star--5"></span>
+        <span class="star star--6"></span>
+    </label>
+</div>
+<script type="text/javascript">
+const theme = localStorage.getItem('theme');
+
+if (theme === "light") {
+    document.documentElement.setAttribute('data-theme', 'light');
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+}
+const userPrefers = getComputedStyle(document.documentElement).getPropertyValue('content');
+
+function activateDarkTheme() {
+    document.getElementById('theme-toggle').checked = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('theme--dark');
+    document.documentElement.classList.remove('theme--light');
+	document.getElementById("theme-toggle").className = 'light';
+	window.localStorage.setItem('theme', 'dark');
+}
+
+function activateLightTheme() {
+    document.getElementById('theme-toggle').checked = false;
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.add('theme--light');
+    document.documentElement.classList.remove('theme--dark');
+	document.getElementById("theme-toggle").className = 'dark';
+	window.localStorage.setItem('theme', 'light');
+}
+
+if (theme === "dark") {
+    activateDarkTheme();
+} else if (theme === "light") {
+    activateLightTheme();
+} else if  (userPrefers === "light") {
+    activateDarkTheme();
+} else {
+    activateDarkTheme();
+}
+
+function modeSwitcher() {
+	let currentMode = document.documentElement.getAttribute('data-theme');
+	if (currentMode === "dark") {
+	    activateLightTheme();
+	} else {
+	    activateDarkTheme();
+	}
+}
+</script></div>
+  </div>
+</footer>
+
+
+<script>
+      window.FontAwesomeConfig = {
+        searchPseudoElements: true
+      }
+    </script>
+  </body>
+
+</html>
