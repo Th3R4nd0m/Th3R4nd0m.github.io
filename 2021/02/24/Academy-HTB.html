@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Academy: HTB" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"/2021/02/24/Academy-HTB.html"},"@type":"BlogPosting","url":"/2021/02/24/Academy-HTB.html","author":{"@type":"Person","name":"Th3R4nd0m"},"headline":"Academy: HTB","dateModified":"2021-02-24T00:00:00-05:00","datePublished":"2021-02-24T00:00:00-05:00","description":"Hi. This is the first box I’ve done since September, and boi….was I rusty…","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","headline":"Academy: HTB","dateModified":"2021-02-24T00:00:00-05:00","datePublished":"2021-02-24T00:00:00-05:00","url":"/2021/02/24/Academy-HTB.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2021/02/24/Academy-HTB.html"},"author":{"@type":"Person","name":"Th3R4nd0m"},"description":"Hi. This is the first box I’ve done since September, and boi….was I rusty…","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <title>
   
@@ -29,8 +29,8 @@
   </title>
 
   <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /></head>
-<body><div class="site-header">
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /></head><body></script>
+<div class="site-header">
   <div class="wrapper">
     <a class="site-title" rel="author" href="/">Th3R4nd0m&#39;s blog<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
     <span class="social_links">
@@ -287,9 +287,7 @@ mrb3n
       </div>
     </main><footer class="site-footer">
   <div class="wrapper">
-  	<center>
-      <script src="https://www.hackthebox.eu/badge/84630"></script>
-    </center>
+
     <div class="credits"><a href="https://github.com/bitbrain/jekyll-dash">dash</a> theme for Jekyll by <a href="https://github.com/bitbrain">bitbrain</a> made with <i class="fas fa-heart"></i><div class="toggleWrapper">
     <input type="checkbox" class="dn" id="theme-toggle" onclick="modeSwitcher()" checked />
     <label for="theme-toggle" class="toggle">
@@ -314,6 +312,7 @@ if (theme === "light") {
 } else {
     document.documentElement.setAttribute('data-theme', 'dark');
 }
+
 const userPrefers = getComputedStyle(document.documentElement).getPropertyValue('content');
 
 function activateDarkTheme() {
@@ -321,8 +320,8 @@ function activateDarkTheme() {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.classList.add('theme--dark');
     document.documentElement.classList.remove('theme--light');
-	document.getElementById("theme-toggle").className = 'light';
-	window.localStorage.setItem('theme', 'dark');
+    document.getElementById("theme-toggle").className = 'light';
+    window.localStorage.setItem('theme', 'dark');
 }
 
 function activateLightTheme() {
@@ -330,8 +329,8 @@ function activateLightTheme() {
     document.documentElement.setAttribute('data-theme', 'light');
     document.documentElement.classList.add('theme--light');
     document.documentElement.classList.remove('theme--dark');
-	document.getElementById("theme-toggle").className = 'dark';
-	window.localStorage.setItem('theme', 'light');
+    document.getElementById("theme-toggle").className = 'dark';
+    window.localStorage.setItem('theme', 'light');
 }
 
 if (theme === "dark") {
@@ -340,19 +339,22 @@ if (theme === "dark") {
     activateLightTheme();
 } else if  (userPrefers === "light") {
     activateDarkTheme();
-} else {
+} else if  (userPrefers === "dark") {
     activateDarkTheme();
 }
 
 function modeSwitcher() {
-	let currentMode = document.documentElement.getAttribute('data-theme');
-	if (currentMode === "dark") {
-	    activateLightTheme();
-	} else {
-	    activateDarkTheme();
-	}
+    let currentMode = document.documentElement.getAttribute('data-theme');
+    if (currentMode === "dark") {
+        activateLightTheme();
+    } else {
+        activateDarkTheme();
+    }
 }
 </script></div>
+    <center>
+      <script src="https://www.hackthebox.eu/badge/84630"></script>
+    </center>
   </div>
 </footer>
 
