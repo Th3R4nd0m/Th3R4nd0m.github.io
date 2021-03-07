@@ -20,16 +20,18 @@
 {"@type":"BlogPosting","headline":"Pwnable.tw Silver Bullet","dateModified":"2021-02-25T00:00:00-05:00","datePublished":"2021-02-25T00:00:00-05:00","url":"/2021/02/25/pwnable.tw-silver_bullet.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2021/02/25/pwnable.tw-silver_bullet.html"},"author":{"@type":"Person","name":"Th3R4nd0m"},"description":"Recon","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <title>
-  
-    Pwnable.tw Silver Bullet
-    
-  -
-  Th3R4nd0m&#39;s blog
-
+Pwnable.tw Silver Bullet - Th3R4nd0m&#39;s blog
   </title>
 
   <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /></head><body></script>
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Th3R4nd0m's blog" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-F8HMZYQ0PM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-F8HMZYQ0PM');
+</script></head><body></script>
 <div class="site-header">
   <div class="wrapper">
     <a class="site-title" rel="author" href="/">Th3R4nd0m&#39;s blog<b class="command_prompt"></b><b class="blinking_cursor">_</b></a>
@@ -375,7 +377,7 @@ pwndbg&gt; x/16x 0xff8558d4
        The concatenated string will start from here  
 </code></pre></div></div>
 
-<p>So, what string do we choose to concatenate? Well, we need high power, so we start with <code class="language-plaintext highlighter-rouge">"\xff" * 3 (*3, because the LSB is already 0x01)</code>. After that, comes EBP, which we can overwrite with anything(<code class="language-plaintext highlighter-rouge">"A"*4</code>), and the ESP(return address), which we can overwrite with everything we need. What do we need? Well, the need a libc leak for us to get the <code class="language-plaintext highlighter-rouge">system</code>’s function address. How do we get a leak? We call <code class="language-plaintext highlighter-rouge">puts(puts_got_entry)</code>. How do we do that?
+<p>So, what string do we choose to concatenate? Well, we need high power, so we start with <code class="language-plaintext highlighter-rouge">"\xff" * 3 (*3, because the LSB is already 0x01)</code>. After that, comes EBP, which we can overwrite with anything(<code class="language-plaintext highlighter-rouge">"A"*4</code>), and the ESP(return address), which we can overwrite with everything we need. What do we need? Well, we need a libc leak in order to get the <code class="language-plaintext highlighter-rouge">system</code>’s function address. How do we get a leak? We call <code class="language-plaintext highlighter-rouge">puts(puts_got_entry)</code>. How do we do that?
 Well, on x32 binaries, it’s like this:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function_called + where_do_we_want_to_return + function_parameter
 </code></pre></div></div>
